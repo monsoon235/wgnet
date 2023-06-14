@@ -1,0 +1,3 @@
+listen: 0.0.0.0:51821
+iface_config_path: example/server-wg.conf
+backend: kernel

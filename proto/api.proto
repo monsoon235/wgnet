@@ -1,0 +1,66 @@
+syntax = "proto3";
+package api;
+
+message PeerConfig {
+  string public_key = 1;
+  optional string endpoint = 2;
+  repeated string allowed_ips = 3;
+  optional string preshared_key = 4;
+  optional uint32 persistent_keepalive = 5;
+}
+
+message InterfaceConfig {
+  string name = 1;
+  string private_key = 2;
+  repeated string addrs = 3;
+  optional uint32 listen_port = 4;
+  optional uint32 mtu = 5;
+  optional string internal_endpoint = 6;
+  optional string external_endpoint = 7;
+  map<string, PeerConfig> peers = 8;
+}
+
+
+service Rpc {
+  rpc Ping (PingRequest) returns (PingResponse);
+  rpc RedeemInvite (RedeemInviteRequest) returns (RedeemInviteReply);
+  rpc PostEndpoint (PostEndpointRequest) returns (PostEndpointReply);
+  // TODO: 加上其他信息更新的功能
+  rpc GetPeers (GetPeersRequest) returns (GetPeersReply);
+}
+
+
+message PingRequest {
+  string msg = 1;
+}
+
+message PingResponse {
+  string msg = 1;
+}
+
+message RedeemInviteRequest {
+  string key = 1;  // same as init iface private key
+
+}
+
+message RedeemInviteReply {
+  repeated InterfaceConfig iface_config = 1;
+}
+
+message PostEndpointRequest {
+  string key = 1;
+  optional string internal_endpoint = 2;
+  optional string external_endpoint = 3;
+}
+
+message PostEndpointReply {
+  bool ok = 1;
+}
+
+message GetPeersRequest {
+  string key = 1;
+}
+
+message GetPeersReply {
+  map<string, PeerConfig> peers = 1;
+}
